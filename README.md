@@ -381,3 +381,20 @@ flowchart TD
     L --> N[Excel]
     L --> O[JSON]
 ```
+
+## Security & GitHub
+
+Do not commit sensitive information to a public repository.
+
+Keep these out of Git when applicable:
+
+```text
+.env
+API keys
+Access tokens
+Passwords
+Database credentials
+Private certificates
+SSH keys
+Internal credentials
+```
