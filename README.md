@@ -1,15 +1,15 @@
-Weather Data Pipeline & FastAPI Service
+# Weather Data Pipeline & FastAPI Service
 
-A Python-based weather project that demonstrates REST API integration, synchronous and asynchronous requests, JSON parsing, data transformation, Pandas data processing, validation, and report generation.
+A Python-based weather project that demonstrates **REST API integration, synchronous and asynchronous requests, JSON parsing, data transformation, Pandas data processing, validation, and report generation**.
 
 The project contains two parts:
 
-Weather Data Pipeline – fetches weather data for multiple cities, processes it with Pandas, validates the data, and exports reports.
+1. **Weather Data Pipeline** – fetches weather data for multiple cities, processes it with Pandas, validates the data, and exports reports.
+2. **Weather API Server** – exposes weather information through FastAPI REST endpoints and supports both single-city and batch requests.
 
-Weather API Server – exposes weather information through FastAPI REST endpoints and supports both single-city and batch requests.
+## Project Architecture
 
-Project Architecture
-
+```mermaid
 flowchart TD
     A[City Names] --> B[Open-Meteo Geocoding API]
     B --> C[Latitude & Longitude]
@@ -23,9 +23,11 @@ flowchart TD
     J --> K[CSV]
     J --> L[Excel]
     J --> M[JSON]
+```
 
-Weather Data Pipeline Flow
+## Weather Data Pipeline Flow
 
+```mermaid
 flowchart TD
     A[Start] --> B[Load Configured Cities]
     B --> C[Geocode City]
@@ -45,9 +47,11 @@ flowchart TD
     N --> O[Sort Data]
     O --> P[Save CSV / Excel / JSON]
     P --> Q[End]
+```
 
-FastAPI Request Flow
+## FastAPI Request Flow
 
+```mermaid
 flowchart LR
     A[Client] --> B[FastAPI]
     B --> C{Endpoint}
@@ -63,81 +67,42 @@ flowchart LR
     L --> M[Pandas DataFrame]
     M --> N[Export Reports]
     N --> O[JSON Response]
+```
 
-Features
+## Features
 
-Fetch current weather for individual cities
+- Fetch current weather for individual cities
+- Fetch weather for multiple cities concurrently
+- City-name geocoding using Open-Meteo
+- Synchronous HTTP requests using `requests`
+- Asynchronous HTTP requests using `httpx`
+- Concurrent processing with `asyncio.gather()`
+- JSON parsing and flattening
+- Pandas DataFrame transformation
+- Data cleaning and validation
+- Celsius-to-Fahrenheit conversion
+- Duplicate and incomplete record handling
+- CSV, Excel, and JSON report generation
+- FastAPI REST endpoints
+- Interactive API documentation through FastAPI `/docs`
 
-Fetch weather for multiple cities concurrently
+## Technologies Used
 
-City-name geocoding using Open-Meteo
+| Technology | Purpose |
+|---|---|
+| Python | Core programming language |
+| FastAPI | REST API development |
+| Uvicorn | ASGI server for FastAPI |
+| Requests | Synchronous HTTP requests |
+| HTTPX | Asynchronous HTTP requests |
+| Asyncio | Concurrent execution |
+| Pandas | Data processing and transformation |
+| OpenPyXL | Excel report generation |
+| Open-Meteo | Weather and geocoding APIs |
 
-Synchronous HTTP requests using requests
+## Project Structure
 
-Asynchronous HTTP requests using httpx
-
-Concurrent processing with asyncio.gather()
-
-JSON parsing and flattening
-
-Pandas DataFrame transformation
-
-Data cleaning and validation
-
-Celsius-to-Fahrenheit conversion
-
-Duplicate and incomplete record handling
-
-CSV, Excel, and JSON report generation
-
-FastAPI REST endpoints
-
-Interactive API documentation through FastAPI /docs
-
-Technologies Used
-
-Technology
-
-Purpose
-
-Python
-
-Core programming language
-
-FastAPI
-
-REST API development
-
-Uvicorn
-
-ASGI server for FastAPI
-
-Requests
-
-Synchronous HTTP requests
-
-HTTPX
-
-Asynchronous HTTP requests
-
-Asyncio
-
-Concurrent execution
-
-Pandas
-
-Data processing and transformation
-
-OpenPyXL
-
-Excel report generation
-
-Open-Meteo
-
-Weather and geocoding APIs
-
-Project Structure
-
+```text
 weather-project/
 │
 ├── weather_api_server.py
@@ -150,15 +115,17 @@ weather-project/
     ├── weather_report.csv
     ├── weather_report.xlsx
     └── weather_report.json
+```
 
-The output/ directory contains generated reports and can be excluded from Git using .gitignore.
+> The `output/` directory contains generated reports and can be excluded from Git using `.gitignore`.
 
-1. Weather Data Pipeline
+## 1. Weather Data Pipeline
 
 The standalone pipeline processes weather information for a configured list of cities.
 
-Pipeline Steps
+### Pipeline Steps
 
+```text
 City Names
     ↓
 Geocoding API
@@ -178,55 +145,73 @@ Cleaning & Validation
 Derived Fields
     ↓
 CSV / Excel / JSON
+```
 
-Run the Pipeline
+### Run the Pipeline
 
+```bash
 python weather_data_pipeline.py
+```
 
 The pipeline saves:
 
+```text
 output/weather_report.csv
 output/weather_report.xlsx
 output/weather_report.json
+```
 
-2. Weather API Server
+## 2. Weather API Server
 
 The FastAPI service provides weather information through REST endpoints.
 
-Start the Server
+### Start the Server
 
+```bash
 uvicorn weather_api_server:app --reload
+```
 
 The API will be available at:
 
+```text
 http://127.0.0.1:8000
+```
 
 Interactive Swagger documentation:
 
+```text
 http://127.0.0.1:8000/docs
+```
 
-API Endpoints
+## API Endpoints
 
-Get Weather for One City
+### Get Weather for One City
 
+```http
 GET /weather/{city}
+```
 
 Example:
 
+```text
 GET /weather/Bangalore
+```
 
-Get Weather for Multiple Cities
+### Get Weather for Multiple Cities
 
+```http
 GET /weather-batch?cities=Bangalore,Mumbai,Delhi,Chennai
+```
 
 The batch endpoint processes multiple cities concurrently and returns requested cities, successful records, failed records, processing time, processed weather data, and generated report paths.
 
-Data Processing
+## Data Processing
 
 The project converts nested API responses into a simpler structure.
 
-Example
+### Example
 
+```text
 Raw API Response
       ↓
 {
@@ -251,132 +236,135 @@ Flattened Record
   weather_code: ...,
   observed_at: ...
 }
+```
 
-Data Validation
+## Data Validation
 
 The project validates weather records before returning or exporting them.
 
 Examples:
 
-Required city and location information must be present
+- Required city and location information must be present
+- Temperature must be within the configured sanity range
+- Wind speed cannot be negative
+- Duplicate cities are removed
+- Records with missing essential data are removed
 
-Temperature must be within the configured sanity range
+## Synchronous vs Asynchronous Processing
 
-Wind speed cannot be negative
-
-Duplicate cities are removed
-
-Records with missing essential data are removed
-
-Synchronous vs Asynchronous Processing
-
-Synchronous
+### Synchronous
 
 Used by:
 
+```text
 GET /weather/{city}
+```
 
 Requests are performed sequentially.
 
+```text
 Request 1 → Response
              ↓
 Request 2 → Response
              ↓
 Request 3 → Response
+```
 
-Asynchronous
+### Asynchronous
 
 Used by:
 
+```text
 GET /weather-batch?cities=...
+```
 
 Multiple city requests can run concurrently.
 
+```text
 City A ─┐
 City B ─┼──→ Concurrent Requests
 City C ─┤
 City D ─┘
              ↓
        Combined Results
+```
 
-Error Handling
+## Error Handling
 
 The application handles common external API and data-processing failures, including:
 
-City not found
+- City not found
+- HTTP/API request failures
+- Invalid API responses
+- Missing data
+- Invalid weather values
+- Failed cities in batch requests
 
-HTTP/API request failures
+## Installation
 
-Invalid API responses
+### 1. Clone the Repository
 
-Missing data
-
-Invalid weather values
-
-Failed cities in batch requests
-
-Installation
-
-1. Clone the Repository
-
+```bash
 git clone <your-repository-url>
 cd <repository-name>
+```
 
-2. Create a Virtual Environment
+### 2. Create a Virtual Environment
 
+```bash
 python -m venv venv
+```
 
-3. Activate the Virtual Environment
+### 3. Activate the Virtual Environment
 
-Windows
+#### Windows
 
+```bash
 venv\Scripts\activate
+```
 
-macOS / Linux
+#### macOS / Linux
 
+```bash
 source venv/bin/activate
+```
 
-4. Install Dependencies
+### 4. Install Dependencies
 
+```bash
 pip install -r requirements.txt
+```
 
-Configuration
+## Configuration
 
 The current implementation uses Open-Meteo APIs and does not require an API key for this use case.
 
 API endpoints used by the project:
 
+```text
 https://geocoding-api.open-meteo.com/v1/search
 https://api.open-meteo.com/v1/forecast
+```
 
-Learning Objectives
+## Learning Objectives
 
 This project demonstrates practical knowledge of:
 
-REST API consumption
+- REST API consumption
+- Synchronous and asynchronous programming
+- Concurrent API requests
+- JSON parsing
+- Data transformation
+- Pandas
+- Data validation
+- FastAPI
+- Error handling
+- File generation and export
+- API documentation
 
-Synchronous and asynchronous programming
+## Example End-to-End Workflow
 
-Concurrent API requests
-
-JSON parsing
-
-Data transformation
-
-Pandas
-
-Data validation
-
-FastAPI
-
-Error handling
-
-File generation and export
-
-API documentation
-
-Example End-to-End Workflow
-
+```mermaid
 flowchart TD
     A[User / Scheduled Run] --> B[City List]
     B --> C[Geocoding API]
@@ -392,5 +380,4 @@ flowchart TD
     L --> M[CSV]
     L --> N[Excel]
     L --> O[JSON]
-
-
+```
