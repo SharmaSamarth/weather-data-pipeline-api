@@ -50,24 +50,26 @@ flowchart TD
 ```
 
 ## FastAPI Request Flow
-
 ```mermaid
 flowchart LR
     A[Client] --> B[FastAPI]
     B --> C{Endpoint}
-    C -->|GET /weather/{city}| D[Geocode City]
-    C -->|GET /weather-batch?cities=...| E[Create Async Tasks]
+
+    C -->|"GET /weather/{city}"| D[Geocode City]
+    C -->|"GET /weather-batch?cities=..."| E[Create Async Tasks]
+
     D --> F[Fetch Weather]
     F --> G[Transform Data]
     G --> H[Validate Data]
     H --> I[JSON Response]
+
     E --> J[Concurrent API Requests]
     J --> K[Transform Results]
     K --> L[Validate Results]
     L --> M[Pandas DataFrame]
     M --> N[Export Reports]
     N --> O[JSON Response]
-```
+  ```
 
 ## Features
 
